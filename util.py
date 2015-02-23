@@ -1,7 +1,6 @@
 from sklearn import tree
 import csv
 import numpy as np
-import matplotlib.pyplot as plt
 
 def load_train(f):
     with open(f, 'r') as fin:
