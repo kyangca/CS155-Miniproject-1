@@ -9,12 +9,10 @@ def load_train(f):
         fin.readline()
         data = np.array(list(csv.reader(fin))).astype(float)
     ids = data[:,0]
-    print ids
     features = data[:, 1:len(data[1,:])-1]
-    print features
     labels = data[:, len(data[1,:])-1]
-    print labels
     fin.close()
+    return ids, features, labels
 
 def load_test(f):
     with open(f, 'r') as fin:
@@ -22,10 +20,9 @@ def load_test(f):
         fin.readline()
         data = np.array(list(csv.reader(fin))).astype(int)
     ids = data[:,0]
-    print ids
     features = data[:, 1:len(data[1,:])]
-    print features
     fin.close()
+    return ids, features
 
 def write_predictions(pred, f):
     with open(f, 'w') as fin:
