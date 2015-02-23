@@ -40,3 +40,4 @@ def populateMatrix(X,Y):
 	
 	return probMat, modelMat
 		
+		
