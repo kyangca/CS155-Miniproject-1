@@ -2,37 +2,30 @@ import sklearn as sk
 import numpy as np
 from sklearn import preprocessing
 
-def makePrediction(weights,models,features,scalar,numCVFolds=5):
+def makePrediction(weights,models,features,scalar):
 	transFeatures=scalar.transform(features)
-	labels=[]
-	fInd=0
+	labels=[0 for x in range(len(features))]
+	numCVFolds=len(models[0][1])
 	
-	for x in transFeatures:
-		labels.append(0)
-		wInd=0
-		for w in weights.flatten():
-			if(w!=0):
-				model=models[wInd][1]
-				for m in model:
+	wInd=0
+	for w in weights.flatten():
+		if(w!=0):
+			model=models[wInd][1]
+			for m in model:
 					if(models[wInd][5]=="standardized"):
-						labels[fInd]+=w*m.predict_proba(x)[0, 1]
+						labels+=w*m.predict_proba(transFeatures)[:, 1]
 					
 					else:
-						labels[fInd]+=w*m.predict_proba(features[fInd])[0, 1]
-				
-			
-			wInd+=1
-			
-		labels[fInd]/=numCVFolds
-		if(labels[fInd]>=0.5):
-			labels[fInd]=1
-		
-		else:
-			labels[fInd]=0
-		
-		fInd+=1
-
+						labels+=w*m.predict_proba(features)[:, 1]
+		wInd+=1
+	
+	labels=labels/numCVFolds
+	
+	labels=labels>=0.5*np.ones(len(labels))
+	
 	return labels
+	
+	
 
 def evaluatePerformance(labels,predictions):
 	norm=len(labels)

@@ -3,7 +3,7 @@ from model_specifications_simple import models
 from sklearn import preprocessing, grid_search, cross_validation
 import numpy as np
 
-TRAIN_PATH = 'kaggle_train_tf_idf.csv'
+TRAIN_PATH = 'kaggle_train_wc.csv'
 
 def train_model_library(n_folds = 5, n_folds_to_compute = 5):
     # ensemble_library_pred is an array of predictions made by the individual models.
