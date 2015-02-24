@@ -50,5 +50,9 @@ def generate_ensemble(library, classes, tolerance = .001, max_iter = float('inf'
                 break
 
         ensemble[bag_idx, :] += weights / n_ensemble
-
-    return ensemble.transpose() / n_be, curr_acc, n_ensemble
+    
+    ensemble = ensemble / n_be
+    
+    ensemble_val_acc = ((library.dot(ensemble) > .5) == classes).sum() / float(classes.size)
+    
+    return ensemble.transpose() / n_be, ensemble_val_acc, n_ensemble
