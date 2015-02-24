@@ -27,8 +27,8 @@ def load_test(f):
 def write_predictions(pred, f):
     with open(f, 'w') as fin:
         fin.write('Id,Prediction\n')
-        for i in range(len(pred[:,0])):
-            fin.write(str(int(pred[i,0])) + ',' + str(int(pred[i,1])) + '\n')
+        for i in range(pred.size):
+            fin.write(str(int(i + 1)) + ',' + str(int(pred[i])) + '\n')
     fin.close()
 
 def normalize_train_standard_score(ftrain, f):
