@@ -13,7 +13,7 @@ def makePrediction(weights,models,features,scalar,numCVFolds=5):
 		for w in weights:
 			if(w!=0):
 				model=models[wInd][1]
-				for m in model
+				for m in model:
 					if(models[wInd][5]=="standardized"):
 						labels[fInd]+=w*m.predict_proba(x)
 					
@@ -21,7 +21,7 @@ def makePrediction(weights,models,features,scalar,numCVFolds=5):
 						labels[fInd]+=w*m.predict_proba(features[fInd])
 				
 			
-			wInd++
+			wInd+=1
 			
 		labels[fInd]/=numCVFolds
 		if(labels[fInd]>=0.5):
@@ -30,7 +30,7 @@ def makePrediction(weights,models,features,scalar,numCVFolds=5):
 		else:
 			labels[fInd]=0
 		
-		fInd++
+		fInd+=1
 
 	return labels
 
@@ -38,7 +38,7 @@ def evaluatePerformance(labels,predictions):
 	norm=len(labels)
 	fraction=0
 	for i in range(norm):
-		if(labels[i]==predictions[i])
+		if(labels[i]==predictions[i]):
 			fraction+=1
 	
 	fraction/=norm
