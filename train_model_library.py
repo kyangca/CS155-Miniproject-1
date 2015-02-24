@@ -1,6 +1,7 @@
 import util
-from model_specifications import models
+from model_specifications_simple import models
 from sklearn import preprocessing, grid_search, cross_validation
+import numpy as np
 
 TRAIN_PATH = 'kaggle_train_tf_idf.csv'
 
@@ -27,12 +28,24 @@ def train_model_library(n_folds = 5, n_folds_to_compute = 5):
     i = 1
     validation_labels = []
     for train_idx, validate_idx in kf_cv:
+        print 'cross validation step # ', i
         training_features = scaler.fit_transform(features[train_idx, :])
         training_labels = labels[train_idx]
         validation_features = scaler.transform(features[validate_idx, :])
-        validation_labels.append(labels[validate_idx][:, np.newaxis])
-        _train_fold(model_grid, training_features, training_labels, validation_features)
+        validation_labels.append(labels[validate_idx])
         
+        for model in model_grid:
+            print model
+            m = model[3](**model[4])
+            if model[5] == 'unstandardized':
+                model[1].append(m.fit(features[train_idx, :], training_labels))
+                model[2].append(m.predict_proba(features[validate_idx, :])[:, 1])
+            elif model[5] == 'standardized':
+                model[1].append(m.fit(training_features, training_labels))
+                model[2].append(m.predict_proba(validation_features)[:, 1])
+            else:
+                raise ValueError('dataset type not recognized')
+
         tot_v_size += validate_idx.size
         if i >= n_folds_to_compute:
             break
@@ -41,26 +54,20 @@ def train_model_library(n_folds = 5, n_folds_to_compute = 5):
     # calibrate scaler to entire training set for subsequent testing
     scaler.fit(features)
     # stack individual validation folds
-    validation_labels = np.vstack(validation_labels)
+    validation_labels = np.concatenate(validation_labels)
     # populate the ensemble library pred and empty the model store to reduce memory
     ensemble_library_pred = np.zeros((tot_v_size, len(model_grid)))
     for model in model_grid:
-        ensemble_library_pred[:, model[0]] = np.vstack(model[2])
+        ensemble_library_pred[:, model[0]] = np.concatenate(model[2])
         model[2] = [] 
 
     return ensemble_library_pred, validation_labels, scaler, model_grid
     
-def _train_fold(model_grid, training_features, training_labels, validation_features):
-    for model in model_grid:
-        m = model[3](**model[4])
-        model[1].append(m.fit(training_features, training_labels))
-        model[2].append(m.predict_proba(validation_features)[:, 1:2])
-
 def _generate_model_grid():
     mg = []
     idx = 0
     for key in models.iterkeys():
         for p in grid_search.ParameterGrid(models[key]['parameters']):
-            mg.append([idx, [], [], key, p])
+            mg.append([idx, [], [], key, p, models[key]['dataset_type']])
             idx += 1
     return mg
