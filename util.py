@@ -43,7 +43,8 @@ def normalize_train_standard_score(ftrain, f):
             for j in range(len(temp)):
                 temp2 = temp2 + str((temp[j]*1.0 - mu) / stdev)
                 temp2 = temp2 + ','
-            temp2 = temp2[:len(temp2)-1] + '\n'
+            temp2 = temp2 + str(labels[i])
+            temp2 = temp2 + '\n'
             fin.write(temp2)
     fin.close()
 
@@ -63,5 +64,40 @@ def normalize_test_standard_score(ftrain, f):
                 else:
                     temp2 = temp2 + '1,'
             temp2 = temp2[:len(temp2)-1] + '\n'
+            fin.write(temp2)
+    fin.close()
+
+def normalize_train_l1(ftrain, f):
+    ids, features, labels = load_train(ftrain)
+    with open(f, 'w') as fin:
+        fin.write('First row doesn\'t count\n')
+        for i in range(len(features)):
+            temp = features[i,:]
+            s = np.sum(temp)
+            temp2 = ''
+            for j in range(len(temp)):
+                temp2 = temp2 + str((temp[j]*1.0) / s)
+                temp2 = temp2 + ','
+            temp2 = temp2 + str(s) + ','
+            temp2 = temp2 + str(labels[i])
+            temp2 = temp2 + '\n'
+            fin.write(temp2)
+    fin.close()
+
+def normalize_test_l1(ftrain, f):
+    ids, features = load_test(ftrain)
+    with open(f, 'w') as fin:
+        fin.write('First row doesn\'t count\n')
+        for i in range(len(features)):
+            temp = features[i,:]
+            s = np.sum(temp)
+            temp2 = ''
+            for j in range(len(temp)):
+                if sum != 0:
+                    temp2 = temp2 + str((temp[j]*1.0) / s)
+                    temp2 = temp2 + ','
+                else:
+                    temp2 = temp2 + '1,'
+            temp2 = temp2 + str(s) + '\n'
             fin.write(temp2)
     fin.close()
