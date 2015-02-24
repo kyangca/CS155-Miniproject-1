@@ -18,7 +18,7 @@ def load_test(f):
     with open(f, 'r') as fin:
         # Get rid of the first line
         fin.readline()
-        data = np.array(list(csv.reader(fin))).astype(int)
+        data = np.array(list(csv.reader(fin))).astype(float)
     ids = data[:,0]
     features = data[:, 1:len(data[1,:])]
     fin.close()

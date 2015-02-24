@@ -60,11 +60,11 @@ models = {
         'parameters': [
             {
                 'base_estimator': [tree.DecisionTreeClassifier(max_depth = 1, max_features = None)],
-                'n_estimators': np.logspace(1, 13, 1, True, 2)
+                'n_estimators': np.logspace(1, 10, 10, True, 2, np.int)
                 },
             {
                 'base_estimator': [tree.DecisionTreeClassifier(max_depth = 1, max_features = 'sqrt')],
-                'n_estimators': np.logspace(1, 13, 1, True, 2)
+                'n_estimators': np.logspace(1, 10, 10, True, 2, np.int)
                 }
             ],
         'dataset_type': 'standardized'

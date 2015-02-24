@@ -37,10 +37,14 @@ def generate_ensemble(library, classes, tolerance = .001, max_iter = float('inf'
         # classifier. This is done with replacement, as suggested in the literature.
         prev_acc = 0
         curr_acc = 0
+        isFirst = True
         while True:
             n_ensemble += 1.
             candidate_acc = (((np.tile(bag.dot(weights), (1, bag_size)) + bag) / 
                     n_ensemble > .5) == classes).sum(axis = 0) / float(classes.size) 
+            if isFirst:
+                c1acc = candidate_acc
+                isFirst = False
             next_idx = candidate_acc.argmax()
             weights[next_idx, 0] += 1
             prev_acc = curr_acc
@@ -55,4 +59,4 @@ def generate_ensemble(library, classes, tolerance = .001, max_iter = float('inf'
     
     ensemble_val_acc = ((library.dot(ensemble) > .5) == classes).sum() / float(classes.size)
     
-    return ensemble, ensemble_val_acc, n_ensemble
+    return ensemble, ensemble_val_acc, n_ensemble, c1acc
