@@ -55,4 +55,4 @@ def generate_ensemble(library, classes, tolerance = .001, max_iter = float('inf'
     
     ensemble_val_acc = ((library.dot(ensemble) > .5) == classes).sum() / float(classes.size)
     
-    return ensemble.transpose() / n_be, ensemble_val_acc, n_ensemble
+    return ensemble, ensemble_val_acc, n_ensemble
