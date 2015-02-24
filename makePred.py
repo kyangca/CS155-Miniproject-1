@@ -10,15 +10,15 @@ def makePrediction(weights,models,features,scalar,numCVFolds=5):
 	for x in transFeatures:
 		labels.append(0)
 		wInd=0
-		for w in weights:
+		for w in weights.flatten():
 			if(w!=0):
 				model=models[wInd][1]
 				for m in model:
 					if(models[wInd][5]=="standardized"):
-						labels[fInd]+=w*m.predict_proba(x)
+						labels[fInd]+=w*m.predict_proba(x)[0, 1]
 					
 					else:
-						labels[fInd]+=w*m.predict_proba(features[fInd])
+						labels[fInd]+=w*m.predict_proba(features[fInd])[0, 1]
 				
 			
 			wInd+=1
