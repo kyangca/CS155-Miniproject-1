@@ -34,6 +34,8 @@ def train_model_library(n_folds = 5, n_folds_to_compute = 5):
         validation_features = scaler.transform(features[validate_idx, :])
         validation_labels.append(labels[validate_idx])
         
+        # loop over all model type and model parameter pairs, train them,
+        # and predict the current validation points
         for model in model_grid:
             print model
             m = model[3](**model[4])
@@ -62,7 +64,8 @@ def train_model_library(n_folds = 5, n_folds_to_compute = 5):
         model[2] = [] 
 
     return ensemble_library_pred, validation_labels, scaler, model_grid
-    
+
+# parse the model specification to generate the parameter grid to loop over
 def _generate_model_grid():
     mg = []
     idx = 0
